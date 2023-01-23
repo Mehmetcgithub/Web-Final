@@ -1,0 +1,86 @@
+﻿@page "/Admin/habers"
+@attribute [Authorize]
+
+
+@using BlazorApp2.Models;
+
+@inherits OwningComponentBase<IHaberRepository>
+
+<h1>Haber Listesi</h1>
+
+<p>This component demonstrates fetching data from a service.</p>
+
+@if (HaberData == null)
+{
+    <p><em>Loading...</em></p>
+
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Desc</th>
+                <th>Category</th>
+                <th>Author</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var hb in HaberData)
+            {
+                <tr>
+                    <td>@hb.HaberId</td>
+                    <td>@hb.HaberTitle</td>
+                    <td>@hb.HaberDescription</td>
+                    <td>@hb.HaberCategory</td>
+                    <td>@hb.HaberAuthor</td>
+                    <td><button class="btn btn-danger btn-sm"
+                    @onclick="@(e => DeleteProduct(hb))">
+                        Delete
+                        </button>
+                    </td>
+                    <td><a class="btn btn-info btn-sm"
+               href="/admin/habers/details/@hb.HaberId">
+                        Details
+                        </a>
+                    </td>
+                    <td><a class="btn btn-warning btn-sm"
+               href="/admin/habers/edit/@hb.HaberId">
+                        Edit
+                        </a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <NavLink class="btn btn-primary" href="/admin/habers/create">Create</NavLink>
+}
+
+@code {
+
+
+
+    public IHaberRepository haberRepository => Service;
+
+    public IEnumerable<Haber> HaberData { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        await UpdateData();
+    }
+
+    public async Task UpdateData()
+    {
+        HaberData = await haberRepository.Habers.ToListAsync();
+    }
+
+    public async Task DeleteProduct(Haber p)
+    {
+        haberRepository.DeleteHaber(p);
+        await UpdateData();
+    }
+    public string GetDetailsUrl(int id) => "/admin/habers/details/{id}";
+    public string GetEditUrl(int id) => "/admin/habers/edit/{id}";
+}

@@ -1,0 +1,35 @@
+﻿@page "/admin/habers/details/{id:int}"
+@attribute [Authorize]
+<h3 class="bg-info text-white text-center p-1">Details</h3>
+
+<table class="table table-sm table-bordered table-striped">
+    <tbody>
+        <tr><th>ID</th><td>@haber.HaberId</td></tr>
+        <tr><th>Title</th><td>@haber.HaberTitle</td></tr>
+        <tr><th>Description</th><td>@haber.HaberDescription</td></tr>
+        <tr><th>Category</th><td>@haber.HaberCategory</td></tr>
+        <tr><th>Author</th><td>@haber.HaberAuthor</td></tr>
+        
+
+    </tbody>
+</table>
+
+
+
+@code {
+
+    [Inject]
+    public IHaberRepository Repository { get; set; }
+
+    [Parameter]
+    public int Id { get; set; }
+
+    public Haber haber { get; set; }
+    
+
+    protected override void OnParametersSet() {
+        haber = Repository.Habers.FirstOrDefault(p => p.HaberId == Id);
+       
+    }
+
+}

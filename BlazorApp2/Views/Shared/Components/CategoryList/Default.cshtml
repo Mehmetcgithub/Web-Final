@@ -1,0 +1,10 @@
+﻿@model IEnumerable<string>
+
+
+<a class="dropdown-item" asp-action="Category" asp-controller="Home"
+   asp-route-category="">TÜM KATEGORİLER</a>
+@foreach(string category in Model){
+    <a class="dropdown-item" asp-action="Category" asp-controller="Home"
+   asp-route-category="@category">@category.ToUpper()</a>
+
+}
